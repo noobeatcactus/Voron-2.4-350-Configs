@@ -64,19 +64,19 @@ switch_pin: PG15
 #   provided.
 
 [scanner]
-canbus_uuid: 8bd3d46e834f            
+#canbus_uuid: 0ca8d67388c2            
 #adjust to suit your scanner 
-#serial: /dev/serial/by-id/usb-Cartographer_614e_3C002D001853584833373720-if00
+serial: /dev/serial/by-id/usb-Cartographer_614e_3C002D001853584833373720-if00
 x_offset: 0                          
 #adjust for your offset
 y_offset: 25                         
 #adjust for your offset
-##calibration_method: touch 
+#calibration_method: touch 
 sensor: cartographer
 sensor_alt: carto
 backlash_comp: 0.00841
 #alternate name to call commands. CARTO_TOUCH etc
-scanner_touch_z_offset: 0.05         
+#scanner_touch_z_offset: 0.05         
 #this is the default and will be overwritten and added to the DO NOT SAVE area by using UI to save z offset
 samples: 5
 samples_result: median
@@ -90,13 +90,8 @@ samples_tolerance_retries: 3
 [mcu]
 ##  Obtain definition by "ls -l /dev/serial/by-id/" then unplug to verify
 ##--------------------------------------------------------------------
-#serial: /dev/serial/by-id/usb-Klipper_stm32h723xx_1F0010000951323532393433-if00
-canbus_uuid: f2899e8cc013
-#restart_method: command
-
-[mcu ToolHead]
-canbus_uuid: dd5e70b95532
-
+serial:  /dev/serial/by-id/usb-Klipper_stm32f446xx_36000B001750535556323420-if00
+restart_method: command
 [temperature_sensor mcu_temp]
 sensor_type: temperature_mcu
 max_temp: 100
@@ -182,7 +177,7 @@ homing_positive_dir: true
 ##  Make sure to update below for your relevant driver (2208 or 2209)
 [tmc2209 stepper_x]
 uart_pin: PC4
-interpolate: false
+interpolate: true
 run_current: 1.2
 sense_resistor: 0.110
 #stealthchop_threshold: 0
@@ -222,7 +217,7 @@ homing_positive_dir: true
 ##  Make sure to update below for your relevant driver (2208 or 2209)
 [tmc2209 stepper_y]
 uart_pin: PD11
-interpolate: false
+interpolate: true
 run_current: 1.2
 sense_resistor: 0.110
 #stealthchop_threshold: 0
@@ -343,7 +338,7 @@ enable_pin: !PD4
 ##  If you ask for 100mm of filament, but in reality it is 98mm:
 ##  rotation_distance = <previous_rotation_distance> * <actual_extrude_distance> / 100
 ##  22.6789511 is a good starting point
-rotation_distance: 23.438737629109   #Bondtech 5mm Drive Gears
+rotation_distance: 23.056007898002   #Bondtech 5mm Drive Gears
 ##  Update Gear Ratio depending on your Extruder Type
 ##  Use 50:10 for Stealthburner/Clockwork 2
 ##  Use 50:17 for Afterburner/Clockwork (BMG Gear Ratio)
@@ -351,14 +346,14 @@ rotation_distance: 23.438737629109   #Bondtech 5mm Drive Gears
 gear_ratio: 50:10               #BMG Gear Ratio
 microsteps: 32
 full_steps_per_rotation: 200    #200 for 1.8 degree, 400 for 0.9 degree
-nozzle_diameter: 0.600
+nozzle_diameter: 0.400
 filament_diameter: 1.75
 heater_pin: PA2
 ## Check what thermistor type you have. See https://www.klipper3d.org/Config_Reference.html#common-thermistors for common thermistor types.
 ## Use "Generic 3950" for NTC 100k 3950 thermistors
 sensor_type: ATC Semitec 104NT-4-R025H42G
 sensor_pin: PF4
-min_temp: 0
+min_temp: -100
 max_temp: 270
 max_power: 1.0
 min_extrude_temp: 140
@@ -375,8 +370,8 @@ pressure_advance_smooth_time: 0.040
 ##  Make sure to update below for your relevant driver (2208 or 2209)
 [tmc2209 extruder]
 uart_pin: PE1
-interpolate: false
-run_current: 0.7
+interpolate: true
+run_current: 0.6
 sense_resistor: 0.110
 #stealthchop_threshold: 0
 
@@ -399,7 +394,7 @@ sensor_type: Generic 3950
 #ATC Semitec 104NT-4-R025H42G
 sensor_pin: PF3
 ##  Adjust Max Power so your heater doesn't warp your bed. Rule of thumb is 0.4 watts / cm^2 .
-max_power: .75
+max_power: 0.6
 min_temp: 0
 max_temp: 120
 #control: pid
@@ -485,7 +480,7 @@ heater_temp: 50.0
 pin: PD12
 kick_start_time: 0.5
 heater: heater_bed
-fan_speed: 0.5
+fan_speed: 1.0
 heater: heater_bed, extruder
 #heater_temp: 50.0
 stepper: stepper_x, stepper_y, stepper_z
@@ -693,45 +688,6 @@ aliases:
 
 # printer.cfg
 
-[shaketune]
- result_folder: ~/printer_data/config/ShakeTune_results
-#    Path where the processed results will be stored. If the folder doesn't exist,
-#    it will be automatically created. You can change this if you'd like to store 
-#    results in a different location.
- number_of_results_to_keep: 10
-#    This setting defines how many results you want to keep in the result folder.
-#    Once the specified number is exceeded, older results will be automatically deleted
-#    to free up space on the SD card and avoid cluttering the results folder.
- keep_raw_data: False
-#    If set to True, Shake&Tune will store both the processed graphs and the raw accelerometer
-#    .stdata files in the results folder. This can be useful for debugging or archiving purposes.
-#    Please always attach them when reporting any issues on GitHub or Discord.
- show_macros_in_webui: True
-#    Mainsail and Fluidd doesn't create buttons for system commands (macros that are not part
-#    of the printer.cfg file). This option allow Shake&Tune to inject them into the webui at runtime.
-#    If set to False, the macros will be hidden but still accessible from the console by typing
-#    their names manually, which can be useful if you prefer to encapsulate them into your own macros.
- timeout: 600
-#    This defines the maximum processing time (in seconds) to allows to Shake&Tune for generating 
-#    graphs from a .stdata file. 10 minutes should be more than enough in most cases, but if you have
-#    slower hardware (e.g., older SD cards or low-performance devices), increase it to prevent timeouts.
- measurements_chunk_size: 2
-#    Each Shake&Tune command uses the accelerometer to take multiple measurements. By default,
-#    Shake&Tune will write a chunk of data to disk every two measurements, and at the end of the
-#    command will merge these chunks into the final .stdata file for processing. "2" is a very
-#    conservative setting to avoid Klipper Timer Too Close errors on lower end devices with little
-#    RAM, and should work for everyone. However, if you are using a powerful computer, you may
-#    wish to increase this value to keep more measurements in memory (e.g., 15-20) before writing
-#    the chunk and avoid stressing the filesystem too much.
- max_freq: 200
-#    This setting defines the maximum frequency at which the calculation of the power spectral density
-#    is cutoff. The default value should be fine for most machines and accelerometer combinations and
-#    avoid touching it unless you know what you're doing.
- dpi: 300
-#    Controls the resolution of the generated graphs. The default value of 300 dpi was optimized
-#    and strikes a balance between performance and readability, ensuring that graphs are clear
-#    without using too much RAM to generate them. Usually, you shouldn't need to change this value.
-
 [gcode_macro CLEAR_ACTIVE_SPOOL]
 gcode:
   {action_call_remote_method(
@@ -754,10 +710,6 @@ gcode:
     G1 Z20                  ; Raise and return
     RESTORE_GCODE_STATE NAME=PURGE
     
-[gcode_macro Tune]
-gcode:
-  g1 x175 y175 z152.5
-  
 [gcode_macro _CQGL]
 gcode:
     {% if printer.quad_gantry_level.applied == False %}
@@ -839,7 +791,6 @@ gcode:
     M106 S0
     G1 y350
   G1 X175
-  SET_HEATER_TEMPERATURE HEATER=heater_bed TARGET=60  
   SET_HEATER_TEMPERATURE HEATER=extruder TARGET=180
   TEMPERATURE_WAIT sensor=extruder minimum=179 maximum=181
   SCRUB_NOZZLE
@@ -861,9 +812,9 @@ resolution: 1.0
 #*#
 #*# [heater_bed]
 #*# control = pid
-#*# pid_kp = 48.752
-#*# pid_ki = 2.754
-#*# pid_kd = 215.728
+#*# pid_kp = 40.068
+#*# pid_ki = 1.979
+#*# pid_kd = 202.844
 #*#
 #*# [extruder]
 #*# control = pid
@@ -877,24 +828,22 @@ resolution: 1.0
 #*# [bed_mesh default]
 #*# version = 1
 #*# points =
-#*# 	  -0.007229, -0.007956, -0.019115, -0.017038, -0.024511
-#*# 	  0.005172, -0.001163, -0.005767, -0.009941, -0.014317
-#*# 	  0.007923, 0.005641, -0.000083, -0.003664, -0.008715
-#*# 	  0.007577, 0.003240, -0.002432, -0.006407, -0.010886
-#*# 	  0.010103, 0.006721, 0.000830, -0.000386, -0.006697
-#*# 	  0.016589, 0.012323, 0.007498, 0.004347, 0.001206
-#*# 	  0.021748, 0.017692, 0.013329, 0.010758, 0.007669
-#*# 	  0.020762, 0.016737, 0.012374, 0.011066, 0.006578
-#*# x_count = 5
-#*# y_count = 8
+#*# 	  0.060272, 0.034464, 0.027078, 0.015733, 0.031391, 0.063893
+#*# 	  0.058858, 0.029903, 0.016136, -0.003422, 0.008142, 0.037373
+#*# 	  0.047164, 0.010637, -0.004155, -0.027916, -0.018719, 0.023390
+#*# 	  0.062435, 0.025431, 0.014640, -0.009272, -0.005411, 0.035471
+#*# 	  0.070314, 0.040433, 0.024726, 0.003589, -0.002313, 0.034269
+#*# 	  0.086592, 0.051383, 0.029913, 0.005297, 0.001475, 0.042238
+#*# x_count = 6
+#*# y_count = 6
 #*# mesh_x_pps = 2
 #*# mesh_y_pps = 2
 #*# algo = bicubic
 #*# tension = 0.2
-#*# min_x = 152.194
-#*# max_x = 199.764
-#*# min_y = 133.379
-#*# max_y = 209.674
+#*# min_x = 50.0
+#*# max_x = 300.0
+#*# min_y = 32.1676
+#*# max_y = 275.0
 #*#
 #*# [input_shaper]
 #*# shaper_type_x = zv
@@ -903,27 +852,24 @@ resolution: 1.0
 #*# shaper_freq_y = 44.8
 #*#
 #*# [scanner model default]
-#*# model_coef = 1.3550517097344492,
-#*# 	1.7940333352890676,
-#*# 	0.7547291048317537,
-#*# 	0.29020276205921613,
-#*# 	0.4196365103333513,
-#*# 	0.6103130123313363,
-#*# 	-0.2638558977181897,
-#*# 	-0.5838615042938026,
-#*# 	0.2853360059302471,
-#*# 	0.3416373428536173
-#*# model_domain = 3.2441865885241043e-07,3.3803256015342105e-07
+#*# model_coef = 1.3295271479095925,
+#*# 	1.7509206637325887,
+#*# 	0.76066515468531,
+#*# 	0.35377341437060184,
+#*# 	0.40847228338009645,
+#*# 	0.4780253570601364,
+#*# 	-0.2642089998011335,
+#*# 	-0.43622727195608496,
+#*# 	0.31642442617540445,
+#*# 	0.30539509423603484
+#*# model_domain = 3.211853494685509e-07,3.3765130392351867e-07
 #*# model_range = 0.100000,5.000000
-#*# model_temp = 27.051150
+#*# model_temp = 23.209218
 #*# model_offset = 0.00000
-#*# model_mode = touch
-#*# model_fw_version = CARTOGRAPHER 5.0.0
 #*#
 #*# [scanner]
 #*# scanner_touch_threshold = 2250
-#*# scanner_touch_z_offset = 0.110
-#*# mode = touch
+#*# scanner_touch_z_offset = 0.080
 #*#
 #*# [skew_correction CaliFlower]
 #*# xy_skew = -0.003804960203956121
