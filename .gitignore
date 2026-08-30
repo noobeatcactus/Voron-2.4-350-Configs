@@ -7,12 +7,4 @@ printer-[0-9]*_[0-9]*.cfg
 *.bkp
 *.csv
 *.zip
-*.swp
-ShakeTune_results
-*.tmp
-printer-[0-9]*_[0-9]*.cfg
-*.bak
-*.bkp
-*.csv
-*.zip
 ShakeTune_results
